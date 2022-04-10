@@ -49,12 +49,8 @@ contract Todo {
         undoneTasks[msg.sender] -= 1;
     }
 
-    function editTask (
-        string memory task_name,
-        string memory new_task_name,
-        uint hours_todo,
-        string memory description
-        ) public onlyOwner(task_name) isNotTimeOut(task_name) isNotCompleted(task_name) {
+    function editTask (string memory task_name, string memory new_task_name, uint hours_todo, string memory description) public onlyOwner(task_name) isNotTimeOut(task_name) isNotCompleted(task_name) {
+
         uint inSeconds = hours_todo * 60 * 60;
 
         AllTasks[indexOfTask[task_name]].task_name = new_task_name;
@@ -75,18 +71,12 @@ contract Todo {
         productivityInPrecent = ((doneInTimeTasks[user_address] * 100) / undoneTasks[user_address]);
     }
 
-    function showTask (string memory task_name) public view returns (
-        uint hours_todo,
-        string memory description,
-        address owner,
-        bool completed,
-        bool completedInTime
-        ) {
-            hours_todo = AllTasks[indexOfTask[task_name]].hours_todo;
-            description = AllTasks[indexOfTask[task_name]].description;
-            completed = AllTasks[indexOfTask[task_name]].completed;
-            completedInTime = AllTasks[indexOfTask[task_name]].completedInTime;
-            owner = AllTasks[indexOfTask[task_name]].owner;
+    function showTask (string memory task_name) public view returns (uint hours_todo, string memory description, address owner, bool completed, bool completedInTime) {
+        hours_todo = AllTasks[indexOfTask[task_name]].hours_todo;
+        description = AllTasks[indexOfTask[task_name]].description;
+        completed = AllTasks[indexOfTask[task_name]].completed;
+        completedInTime = AllTasks[indexOfTask[task_name]].completedInTime;
+        owner = AllTasks[indexOfTask[task_name]].owner;
     }
 
     function showUserTasks (address user_address) public view returns (string[] memory) {
@@ -99,6 +89,7 @@ contract Todo {
                 userTasksIndex++;
             }
         }
+
         return UserTasks;
     }
 
