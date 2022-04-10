@@ -6,7 +6,7 @@ contract Todo {
     address public contractAddress;
 
     mapping (string => uint) indexOfTask;
-    mapping (address => uint) internal undoneTasks;
+    mapping (address => uint) internal allUserTasks;
     mapping (address => uint) internal doneInTimeTasks;
 
     constructor() {
@@ -30,7 +30,7 @@ contract Todo {
         require (hours_todo > 0, "You have to input atleast 1 hour to do task");
         
         indexOfTask[task_name] = AllTasks.length;
-        undoneTasks[msg.sender] += 1;
+        allUserTasks[msg.sender] += 1;
 
         uint inSeconds = hours_todo * 60 * 60;
 
@@ -46,11 +46,15 @@ contract Todo {
 
     function deleteTask (string memory task_name) public onlyOwner(task_name) {
         delete AllTasks[indexOfTask[task_name]];
-        undoneTasks[msg.sender] -= 1;
+        allUserTasks[msg.sender] -= 1;
     }
 
-    function editTask (string memory task_name, string memory new_task_name, uint hours_todo, string memory description) public onlyOwner(task_name) isNotTimeOut(task_name) isNotCompleted(task_name) {
-
+    function editTask (
+        string memory task_name,
+        string memory new_task_name,
+        uint hours_todo,
+        string memory description
+        ) public onlyOwner(task_name) isNotTimeOut(task_name) isNotCompleted(task_name) {
         uint inSeconds = hours_todo * 60 * 60;
 
         AllTasks[indexOfTask[task_name]].task_name = new_task_name;
@@ -68,19 +72,25 @@ contract Todo {
     }
 
     function showProductivity (address user_address) public view returns (uint productivityInPrecent) {
-        productivityInPrecent = ((doneInTimeTasks[user_address] * 100) / undoneTasks[user_address]);
+        productivityInPrecent = ((doneInTimeTasks[user_address] * 100) / allUserTasks[user_address]);
     }
 
-    function showTask (string memory task_name) public view returns (uint hours_todo, string memory description, address owner, bool completed, bool completedInTime) {
-        hours_todo = AllTasks[indexOfTask[task_name]].hours_todo;
-        description = AllTasks[indexOfTask[task_name]].description;
-        completed = AllTasks[indexOfTask[task_name]].completed;
-        completedInTime = AllTasks[indexOfTask[task_name]].completedInTime;
-        owner = AllTasks[indexOfTask[task_name]].owner;
+    function showTask (string memory task_name) public view returns (
+        uint hours_todo,
+        string memory description,
+        address owner,
+        bool completed,
+        bool completedInTime
+        ) {
+            hours_todo = AllTasks[indexOfTask[task_name]].hours_todo;
+            description = AllTasks[indexOfTask[task_name]].description;
+            completed = AllTasks[indexOfTask[task_name]].completed;
+            completedInTime = AllTasks[indexOfTask[task_name]].completedInTime;
+            owner = AllTasks[indexOfTask[task_name]].owner;
     }
 
     function showUserTasks (address user_address) public view returns (string[] memory) {
-        string[] memory UserTasks = new string[](undoneTasks[user_address]);
+        string[] memory UserTasks = new string[](allUserTasks[user_address]);
         uint userTasksIndex;
 
         for (uint i = 0; i < AllTasks.length; i++) {
@@ -89,7 +99,6 @@ contract Todo {
                 userTasksIndex++;
             }
         }
-
         return UserTasks;
     }
 
