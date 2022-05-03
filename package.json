@@ -9,6 +9,7 @@
     "test": "npx hardhat test",
     "format": "prettier --write \"tests/**/*.ts\" \"tasks/**/*.ts\" \"contracts/**/*.sol\" \"hardhat.config.ts\"",
     "pretty-quick": "pretty-quick --staged",
+    "deploy:localhost": "hardhat --network localhost deploy",
     "deploy:avalanche": "hardhat --network avalanche deploy",
     "verify:avalanche": "hardhat --network avalanche etherscan-verify --solc-input",
     "export:avalanche": "hardhat --network avalanche export --export deployments/avalanche.json",

@@ -56,7 +56,7 @@ const config: HardhatUserConfig = {
             },
         },
         ropsten: {
-            url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
+            url: `https://eth-ropsten.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
             accounts: {
                 mnemonic: process.env.MNEMONIC,
             },
